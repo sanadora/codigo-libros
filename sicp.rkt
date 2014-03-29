@@ -64,3 +64,28 @@
 
 (sqrt 36)
 
+;; Ejercicio 1.8
+(define (cubert x)
+  (cubert-iter x 1.0 0))
+
+(define (cubert-iter x guess prev-guess)
+  (define (improve guess)
+    (/ (+ (/ x (square guess))
+	  (* 2 guess))
+       3))
+  (if (good-enough? guess prev-guess)
+      guess
+      (cubert-iter x
+		   (improve guess)
+		   guess)))
+
+(cubert 27)
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Section  1.2 Procedures and the Processes They Generate ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Excercise 1.9
