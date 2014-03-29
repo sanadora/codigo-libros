@@ -26,8 +26,41 @@
   (* a a))
 
 ;; Excercise 1.6
+;; Loopea infinitamente porque el "if" primitivo es una special-form que usa normal-order evaluation. En cambio, el "new-if", como todo procedimiento normal de lisp, applicative-order evaluation, por lo que evalua sus argumentos antes de aplicar el new-if, entonces evalua infinitamente el (sqrt-iter (improve guess x) x)
 (define (new-if predicate then-clause else-clause)
   (cond
    (predicate then-clause)
    (else else-clause)))
+
+
+;; Excercise 1.7
+(define (sqrt-iter guess x prev-guess)
+  (if (good-enough? guess prev-guess)
+      guess
+      (sqrt-iter (improve guess x)
+		 x
+		 guess)))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+(define (average x y)
+  (/ (+ x y) 2))
+
+(define (good-enough? guess prev-guess)
+  (< (/ (abs (- guess prev-guess))
+	(abs guess))
+     tolerance))
+
+(define tolerance 0.001)
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x 0.0))
+
+(define (abs x)
+  (if (< x 0)
+      (- x)
+      x))
+
+(sqrt 36)
 
