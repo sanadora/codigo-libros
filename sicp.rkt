@@ -128,3 +128,6 @@
 
 (f 5)
 (f-iterativa 5) 
+
+;; Excercise 1.12
+(define (pascal-elem row col))
