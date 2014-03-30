@@ -88,4 +88,5 @@
 ;; Section  1.2 Procedures and the Processes They Generate ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Excercise 1.9
+;; Excercise 1.12
+(define (pascal-elem row col))
