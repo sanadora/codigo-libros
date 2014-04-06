@@ -130,4 +130,7 @@
 (f-iterativa 5) 
 
 ;; Excercise 1.12
-(define (pascal-elem row col))
+(define (pascal-elem row col)
+  (/ (factorial row)
+     (* (factorial col)
+	(factorial (- row col)))))
