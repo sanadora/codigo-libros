@@ -4,8 +4,13 @@
 
 (defparameter *num-players* 2)
 (defparameter *max-dice* 3)
-(defparameter *board-size* 2)
+(defparameter *board-size* 3)
 (defparameter *board-hexnum* (* *board-size* *board-size*))
+
+;; representacion del tablero de 2x2 hexagonos
+;; ((0 3) (0 3) (1 3) (1 1))
+;; el jugador 0 tiene 3 dados en la casilla nro 0, 3 en la nro 1
+;; el jugador 1 tiene 3 dados en la 2 y 1 en la 2
 
 (defun board-array (lst)
   (make-array *board-hexnum* :initial-contents lst))
@@ -85,17 +90,17 @@
 				((eq pos dst) (list player (1- dice)))
 				(t hex)))))
 
-(defun add-new-dice (board player spare-dice)
-  (labels ((f (lst n)
-	     (cond ((null lst) nil)
-		   ((zerop n) lst)
-		   (t (let ((cur-player (caar lst))
-			    (cur-dice (cadar lst)))
-			(if (and (eq cur-player player) (< cur-dice *max-dice*))
-			    (cons (list cur-player (1+ cur-dice))
-				  (f (cdr lst) (1- n)))
-			    (cons (car lst) (f (cdr lst) n))))))))
-    (board-array (f (coerce board 'list) spare-dice))))
+;; (defun add-new-dice (board player spare-dice)
+;;   (labels ((f (lst n)
+;; 	     (cond ((null lst) nil)
+;; 		   ((zerop n) lst)
+;; 		   (t (let ((cur-player (caar lst))
+;; 			    (cur-dice (cadar lst)))
+;; 			(if (and (eq cur-player player) (< cur-dice *max-dice*))
+;; 			    (cons (list cur-player (1+ cur-dice))
+;; 				  (f (cdr lst) (1- n)))
+;; 			    (cons (car lst) (f (cdr lst) n))))))))
+;;     (board-array (f (coerce board 'list) spare-dice))))
 
 (defun play-vs-human (tree)
   (print-info tree)
@@ -143,5 +148,68 @@
 	(format t "The winner is ~a" (player-letter (car w))))))
 
 
-	
-				    
+(defun rate-position (tree player)
+  (let ((moves (caddr tree)))
+    (if moves
+	(apply (if (eq (car tree) player)
+		   #'max
+		   #'min)
+	       (get-ratings tree player))
+	(let ((w (winners (cadr tree))))
+	  (if (member player w)
+	      (/ 1 (length w))
+	      0)))))
+
+(defun get-ratings (tree player)
+  (mapcar (lambda (move)
+	    (rate-position (cadr move) player))
+	  (caddr tree)))
+
+(defun handle-computer (tree)
+  (let ((ratings (get-ratings tree (car tree))))
+    (cadr (nth (position (apply #'max ratings) ratings) (caddr tree)))))
+
+(defun play-vs-computer (tree)
+  (print-info tree)
+  (cond ((null (caddr tree)) (announce-winner (cadr tree)))
+	((zerop (car tree)) (play-vs-computer (handle-human tree)))
+	(t (play-vs-computer (handle-computer tree)))))
+
+
+
+
+(let ((old-neighbors (symbol-function 'neighbors))
+      (previous (make-hash-table)))
+  (defun neighbors (pos)
+    (or (gethash pos previous)
+	(setf (gethash pos previous) (funcall old-neighbors pos)))))
+
+(let ((old-game-tree (symbol-function 'game-tree))
+      (previous (make-hash-table :test #'equalp)))
+  (defun game-tree (&rest rest)
+    (or (gethash rest previous)
+	(setf (gethash rest previous) (apply old-game-tree rest)))))
+      
+(let ((old-rate-position (symbol-function 'rate-position))
+      (previous (make-hash-table)))
+  (defun rate-position (tree player)
+    (let ((tab (gethash player previous)))
+      (unless tab
+	(setf tab (setf (gethash player previous) (make-hash-table))))
+      (or (gethash tree tab)
+	  (setf (gethash tree tab)
+		(funcall old-rate-position tree player))))))
+
+(defun add-new-dice (board player spare-dice)
+  (labels ((f (lst n acc)
+	     (cond ((null lst) (reverse acc))
+		   ((zerop n) (append (reverse acc) lst))
+		   (t (let ((cur-player (caar lst))
+			    (cur-dice (cadar lst)))
+			(if (and (eq cur-player player)
+				 (< cur-dice *max-dice*))
+			    (f (cdr lst)
+			       (1- n)
+			       (cons (list cur-player (1+ cur-dice)) acc))
+			    (f (cdr lst) n (cons (car lst) acc))))))))
+    (board-array (f (coerce board 'list) spare-dice ()))))
