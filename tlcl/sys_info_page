@@ -6,6 +6,28 @@ TITLE="System Information Report For $HOSTNAME"
 CURRENT_TIME=$(date +"%x %r %Z")
 TIMESTAMP="Generated $CURRENT_TIME, by $USER"
 
+function report_uptime() {
+  cat <<- EOF
+<h2>System Uptime</h2>
+<pre>$(uptime)</pre>
+EOF
+}
+
+
+function report_disk_space() {
+  cat <<EOF
+<h2>Disk Space Utilization</h2>
+<pre>$(df -h)</pre>
+EOF
+}
+
+function report_home_space() {
+  cat <<EOF
+<h2>Home Space Utilization</h2>
+<pre>$(du -sh /home/*)</pre>
+EOF
+}
+
 cat <<EOF  
 <html>
    <head>
@@ -14,7 +36,9 @@ cat <<EOF
    <body>
       <h1>$TITLE</h1>
       <p>$TIMESTAMP</p>
+      $(report_uptime)
+      $(report_disk_space)
+      $(report_home_space)
    </body>
 </html>
 EOF
-
