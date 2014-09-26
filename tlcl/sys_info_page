@@ -7,7 +7,7 @@ CURRENT_TIME=$(date +"%x %r %Z")
 TIMESTAMP="Generated $CURRENT_TIME, by $USER"
 
 function report_uptime() {
-  cat <<- EOF
+  cat<<EOF
 <h2>System Uptime</h2>
 <pre>$(uptime)</pre>
 EOF
@@ -15,7 +15,7 @@ EOF
 
 
 function report_disk_space() {
-  cat <<EOF
+cat <<EOF
 <h2>Disk Space Utilization</h2>
 <pre>$(df -h)</pre>
 EOF
@@ -40,5 +40,4 @@ cat <<EOF
       $(report_disk_space)
       $(report_home_space)
    </body>
-</html>
 EOF
