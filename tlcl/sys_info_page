@@ -22,13 +22,21 @@ EOF
 }
 
 function report_home_space() {
-  cat <<EOF
-<h2>Home Space Utilization</h2>
+  if [ $(id -u) -eq 0 ]; then
+    cat <<EOF
+<h2>Home Space Utilization (All Users)</h2>
 <pre>$(du -sh /home/*)</pre>
 EOF
+  else
+    cat <<EOF
+<h2>Home Space Utilization ($USER)</h2>
+<pre>$(du -sh $HOME)</pre>
+EOF
+  fi
+  return
 }
 
-cat <<EOF  
+Cat <<EOF  
 <html>
    <head>
       <title>$TITLE</title>

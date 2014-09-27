@@ -1,0 +1,16 @@
+#!/bin/bash
+
+read -p "Enter one or more values > "
+echo "REPLY = '$REPLY'"
+
+if read -t 10 -sp "Enter secret passphrase > " sec_pass; then
+  echo -e "\nSecret passphrase = '$sec_pass'"
+else
+  echo -e "\nInput timed out" >&2
+  exit 1
+fi
+
+read -e -p "What is your user name? " -i $USER
+echo "You answered: '$REPLY'"
+
+
