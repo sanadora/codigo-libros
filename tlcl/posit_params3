@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# posit-params3: script to demosntrate $* and $@
+
+function print_params() {
+  echo "Num of params (print): $#"
+  echo "\$1 = $1"
+  echo "\$2 = $2"
+  echo "\$3 = $3"
+  echo "\$4 = $4"
+}
+
+function pass_params() {
+  echo "Num of params (pass): $#"
+  echo -e "\n" '$* :'; print_params $*
+  echo -e "\n" '"$*" :'; print_params "$*"
+  echo -e "\n" '$@ :'; print_params $@
+  # "$@" es por lejos la forma mas utilizada
+  # porque conserva la integridad de casa parametro posicional
+  echo -e "\n" '"$@" :'; print_params "$@"
+}
+
+pass_params "word" "words with spaces"

@@ -15,3 +15,6 @@ else
   echo "no funca"
 fi
 
+# puesto para probar "export" desde el shell que llama al programa
+echo $alberto
+
