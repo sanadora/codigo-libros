@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# pruebo hacer los ifs sin test y sin el built-in [[ ]]
+read -p "Enter selection [0-3] > "
+
+if echo $REPLY | grep '^[0-3]$' ; then
+  echo "vamos meneem"
+else
+  echo "no funca"
+fi
+
+if test -n "$(echo $REPLY | grep '^[0-3]$')"  ; then
+  echo "vamos meneem"
+else
+  echo "no funca"
+fi
+
