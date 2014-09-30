@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# longest-word: find the longest string in a file
+
+#while [[ -n $1 ]]; do
+for param; do
+  if [[ -r $param  ]]; then
+    max_word=
+    max_len=
+    for i in $(strings $param); do
+      len=$(echo $i | wc -c)
+      if (( len > max_len )); then
+        max_len=$len
+        max_word=$i
+      fi
+    done
+    echo "$1: '$max_word' ($max_len characters)"
+  fi
+#  shift
+done
+
