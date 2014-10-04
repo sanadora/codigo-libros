@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# trap-demo: simple signal handling demo
+
+function exit_on_signal_SIGINT() {
+  echo "Script interrupted." 2>&1
+  exit 0
+}
+
+function exit_on_signal_SIGTERM() {
+  echo "Script terminated." 2>&1
+  exit 0
+}
+
+
+trap exit_on_signal_SIGINT SIGINT
+trap exit_on_signal_SIGTERM SIGTERM
+
+for i in {1..5}; do
+  echo "Iteration $i of 5."
+  echo "Before sleep"
+  sleep 5
+  echo "After sleep"
+done
