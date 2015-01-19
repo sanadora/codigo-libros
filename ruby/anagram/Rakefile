@@ -1,0 +1,46 @@
+require 'rubygems/package_task'
+#require 'rake/gempackagetask'
+
+spec = Gem::Specification.new do |s|
+  s.name = "anagram"
+  s.summary = "Find anagrams of words supplied on the command line"
+  s.description = "An example project."
+  s.requirements = ['An installed dictionary']
+  s.version = "0.0.1"
+  s.author = "Dave Thomas"
+  s.email = "dave@pragprog.com"
+  s.homepage = "http://pragdave.pragprog.com"
+  s.platform = Gem::Platform::RUBY
+  s.required_ruby_version = '>1.9'
+  s.files = Dir['**/**']
+  s.executables = ['anagram']
+  s.test_files = Dir["test/test*.rb"]
+  s.has_rdoc = false
+end
+
+#Rake::GemPackageTask.new(spec).define
+Gem::PackageTask.new(spec)
+
+def delete(pattern)
+  files = Dir[pattern]
+  rm(files, verbose: true) unless files.empty?
+end
+
+desc "Remove files whose name end with a tilde"
+task :delete_unix_backups do
+  delete "*~"
+end
+
+desc "remove files with .bak extension"
+task :delete_windows_backups do
+  delete "*.bak"
+end
+
+desc "Remove Unix and Windows backup files"
+task :delete_backups => [:delete_unix_backups,
+                         :delete_windows_backups] do
+  puts "All backups deleted"
+end
+
+
+  

@@ -32,3 +32,25 @@ loop do
 end
 
     
+
+
+module Logger
+  def log(msg)
+    STDERR.puts Time.now.strftime("%H:%M:%S: ") + "#{self} (#{msg})"
+  end
+end
+
+class Song
+  # include adds Logger instance methods as Song's instance methods
+  include Logger
+end
+
+
+
+
+
+
+
+
+
+
