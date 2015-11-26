@@ -40,7 +40,7 @@ methods.GET = function(path, respond) {
 	  respond(200, files.join("\n"));
       });
     else
-      respond(200, fs.createReadStream(path), "text/plain");
+      respond(200, fs.createReadStream(path), require("mime").lookup(path));
   });
 };
 
