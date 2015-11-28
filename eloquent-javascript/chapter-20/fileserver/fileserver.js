@@ -2,7 +2,7 @@ var http = require("http"), fs = require("fs");
 
 var methods = Object.create(null);
 
-http.createServer(function(request, response) {
+var server =  http.createServer(function(request, response) {
   function respond(code, body, type) {
     if (!type) type = "text/plain";
     response.writeHead(code, {"Content-type": type});
@@ -15,7 +15,9 @@ http.createServer(function(request, response) {
     methods[request.method](urlToPath(request.url), respond, request);
   else
     respond(405, "Method " + request.method + " not allowed.");
-}).listen(8000);
+});
+console.log("listening on port 8000...");
+server.listen(8000);
 
 function urlToPath(url){
   var path = require("url").parse(url).pathname;
@@ -27,7 +29,7 @@ function urlToPath(url){
 
 
 methods.GET = function(path, respond) {
-   fs.stat(path, function(error, stats) {
+  fs.stat(path, function(error, stats) {
     if (error && error.code == "ENOENT")
       respond(404, "File not found.");
     else if (error)
