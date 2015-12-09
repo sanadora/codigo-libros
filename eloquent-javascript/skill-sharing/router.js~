@@ -1,0 +1,3 @@
+var Router = module.exports = function() {
+  this.routes = [];
+}
