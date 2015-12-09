@@ -147,4 +147,23 @@ function registerChange(title) {
   waiting = [];
 }
 
-
+function getChangedTalks(since) {
+  var found = [];
+  function(title) {
+    return found.some(function(f) {
+      return f.title == title;
+    });
+  }
+  for (var i = changes.length; i >= 0; i--) {
+    var change = changes[i];
+    if (change.time <= since)
+      break;
+    else if (alreadySeen(change.title))
+      continue;
+    else if (change.title in talks)
+      found.push(talks[change.title]);
+    else
+      found.push({title: change.title, deleted: true});
+  }
+  return found;
+}
