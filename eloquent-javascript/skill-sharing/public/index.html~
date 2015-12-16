@@ -1,0 +1,9 @@
+<!doctype html>
+<html>
+  <head>
+    <title>My test page</title>
+  </head>
+  <body>
+    <script src="promises.js"></script>
+  </body>
+</html>
